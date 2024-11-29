@@ -28,45 +28,82 @@
 #define MOTOR_A_IN1 PCA_CHANNEL_1
 #define MOTOR_A_IN2 PCA_CHANNEL_2
 
+#define MOTOR_B_PWM PCA_CHANNEL_3
+#define MOTOR_B_IN1 PCA_CHANNEL_4
+#define MOTOR_B_IN2 PCA_CHANNEL_5
+
 void motor_init() {
-    if (DEV_ModuleInit()) {
-        printf("Init failed\n");
+    int result = DEV_ModuleInit();
+    if (result) {
+        printf("Init failed with error code: %d\n", result);
         exit(1);
     }
+    
     PCA9685_Init(0x40);
     PCA9685_SetPWMFreq(50);
 }
 
-void motor_control(int speed, int direction) {
-    PCA9685_SetPwmDutyCycle(MOTOR_A_PWM, speed);
-    if (direction == 1) {
-        PCA9685_SetLevel(MOTOR_A_IN1, 1);
-        PCA9685_SetLevel(MOTOR_A_IN2, 0);
-    } else {
-        PCA9685_SetLevel(MOTOR_A_IN1, 0);
-        PCA9685_SetLevel(MOTOR_A_IN2, 1);
+void motor_control(int motor, int speed) {
+    int direction = (speed >= 0) ? 1 : 0;
+    
+    int abs_speed = abs(speed);
+   
+    if (abs_speed > 100) abs_speed = 100;
+    
+    if (motor == 1) {  // Motor A
+        PCA9685_SetPwmDutyCycle(MOTOR_A_PWM, abs_speed);
+        if (direction == 1) {
+            PCA9685_SetLevel(MOTOR_A_IN1, 1);
+            PCA9685_SetLevel(MOTOR_A_IN2, 0);
+        } else {
+            PCA9685_SetLevel(MOTOR_A_IN1, 0);
+            PCA9685_SetLevel(MOTOR_A_IN2, 1);
+        }
+    } else if (motor == 2) {  // Motor B
+        PCA9685_SetPwmDutyCycle(MOTOR_B_PWM, abs_speed);
+        if (direction == 1) {
+            PCA9685_SetLevel(MOTOR_B_IN1, 1);
+            PCA9685_SetLevel(MOTOR_B_IN2, 0);
+        } else {
+            PCA9685_SetLevel(MOTOR_B_IN1, 0);
+            PCA9685_SetLevel(MOTOR_B_IN2, 1);
+        }
     }
 }
 
-void motor_stop() {
-    PCA9685_SetPwmDutyCycle(MOTOR_A_PWM, 0);
-    PCA9685_SetLevel(MOTOR_A_IN1, 0);
-    PCA9685_SetLevel(MOTOR_A_IN2, 0);
+void motor_stop(int motor) {
+    if (motor == 1) {  // Motor A
+        PCA9685_SetPwmDutyCycle(MOTOR_A_PWM, 0);
+        PCA9685_SetLevel(MOTOR_A_IN1, 0);
+        PCA9685_SetLevel(MOTOR_A_IN2, 0);
+    } else if (motor == 2) {  // Motor B
+        PCA9685_SetPwmDutyCycle(MOTOR_B_PWM, 0);
+        PCA9685_SetLevel(MOTOR_B_IN1, 0);
+        PCA9685_SetLevel(MOTOR_B_IN2, 0);
+    }
 }
 
 int main() {
     motor_init();
     
-    printf("Forward at 50%%\n");
-    motor_control(50, 1);
+    printf("Both motors forward at 50%%\n");
+    motor_control(1, 50);   // Motor A forward
+    motor_control(2, 50);   // Motor B forward
     sleep(3);
     
-    printf("Reverse at 50%%\n");
-    motor_control(50, 0);
+    printf("Stopping both motors\n");
+    motor_stop(1);
+    motor_stop(2);
+    usleep(100000);
+
+    printf("Motors in opposite directions\n");
+    motor_control(1, -50);  // Motor A reverse
+    motor_control(2, -50);  // Motor B reverse
     sleep(3);
     
-    printf("Stopping\n");
-    motor_stop();
+    printf("Stopping both motors\n");
+    motor_stop(1);
+    motor_stop(2);
     
     DEV_ModuleExit();
     return 0;
