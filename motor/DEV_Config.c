@@ -48,7 +48,7 @@ static int DEV_Equipment_Testing(void)
 		printf("Unrecognizable\r\n");
         return -1;
 	} else {
-		char RPI_System[10]   = {"Raspbian"};
+		char RPI_System[10]   = {"Debian"};
 		for(i=0; i<6; i++) {
 			if(RPI_System[i] != value_str[i]) {
                 #if USE_DEV_LIB    
