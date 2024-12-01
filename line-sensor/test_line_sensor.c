@@ -1,5 +1,5 @@
 #include "line_sensor.h"
-#include <pigpio.h>  // Include pigpio.h for gpioTerminate and other functions
+#include <bcm2835.h>
 #include <stdio.h>
 
 int main() {
@@ -10,7 +10,7 @@ int main() {
     test_line_sensors();
 
     // Terminate GPIO safely
-    gpioTerminate();
+    bcm2835_close();
     printf("Program terminated successfully. Stored %d readings.\n", reading_index);
     fflush(stdout);
     return 0;

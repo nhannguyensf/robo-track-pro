@@ -1,23 +1,9 @@
-/**************************************************************
-* Class    : CSC-615-01 Fall 2024
-* Name     : Nhan Nguyen
-* Student ID: 923100929
-* Github   : nhannguyensf
-* Project  : Final Assignment - Line Sensors Testing
-*
-* File     : line_sensor.c
-*
-* Description:
-*   This file contains the implementation of the functions for
-*   initializing and reading the state of multiple line sensors.
-**************************************************************/
-
 #include "line_sensor.h"
+#include <bcm2835.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <pigpio.h>
-#include <unistd.h>
 #include <time.h>
+#include <unistd.h>
 
 // Array to store sensor readings
 int sensor_readings[MAX_READINGS][3];
@@ -25,20 +11,22 @@ int reading_index = 0;
 
 // Initialize the line sensors GPIO pins
 void line_sensors_init() {
-    if (gpioInitialise() < 0) {
-        fprintf(stderr, "pigpio initialization failed\n");
+    if (!bcm2835_init()) {
+        fprintf(stderr, "bcm2835 initialization failed\n");
         exit(1);
     }
-    gpioSetMode(SENSOR_1_PIN, PI_INPUT);
-    gpioSetMode(SENSOR_2_PIN, PI_INPUT);
-    gpioSetMode(SENSOR_3_PIN, PI_INPUT);
+
+    // Set the sensor pins as input
+    bcm2835_gpio_fsel(SENSOR_1_PIN, BCM2835_GPIO_FSEL_INPT);
+    bcm2835_gpio_fsel(SENSOR_2_PIN, BCM2835_GPIO_FSEL_INPT);
+    bcm2835_gpio_fsel(SENSOR_3_PIN, BCM2835_GPIO_FSEL_INPT);
 }
 
 // Read the state of all line sensors and store in an array
 void read_line_sensors(int* sensor_states) {
-    sensor_states[0] = gpioRead(SENSOR_1_PIN);
-    sensor_states[1] = gpioRead(SENSOR_2_PIN);
-    sensor_states[2] = gpioRead(SENSOR_3_PIN);
+    sensor_states[0] = bcm2835_gpio_lev(SENSOR_1_PIN);
+    sensor_states[1] = bcm2835_gpio_lev(SENSOR_2_PIN);
+    sensor_states[2] = bcm2835_gpio_lev(SENSOR_3_PIN);
 }
 
 // Test the line sensors and store results in an array

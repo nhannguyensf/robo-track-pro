@@ -1,7 +1,7 @@
-# Makefile for Line Sensor Testing
+# Makefile for Line Sensor Testing with BCM2835 Library
 
 CC = gcc
-CFLAGS = -g -Wall -lpigpio -pthread
+CFLAGS = -g -Wall -I. -lbcm2835
 
 # Executable name
 EXEC = test_line_sensor.out
