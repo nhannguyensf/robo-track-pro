@@ -1,41 +1,50 @@
-# File: Top-Level Makefile for Final Assignment - Motor Control
+# File: Top-Level Makefile for Final Assignment - Motor Control and Line Sensor
 #
-# Description: This Makefile handles both the main program and motor testing.
-# It consolidates all tasks from the motor folder into this single Makefile.
+# Description: This Makefile handles the compilation and execution of
+# both motor control and line sensor testing programs.
 #
 # Commands:
-#   make               - Compiles both main.out and test_motor.out.
-#   make run           - Runs the main program (main.out).
-#   make run_test_motor - Runs the motor test program (test_motor.out).
-#   make clean         - Cleans up all build artifacts.
+#   make                   - Compiles all programs.
+#   make run               - Runs the main program (main.out).
+#   make run_test_motor    - Runs the motor test program (test_motor.out).
+#   make run_test_line_sensor - Runs the line sensor test program (test_line_sensor.out).
+#   make clean             - Cleans up all build artifacts.
 #
 
 # Compiler and flags
-CC=gcc
-CFLAGS=-g -I./motor -D USE_BCM2835_LIB
-LDFLAGS=-L/usr/local/lib
-LIBS=-lbcm2835 -lpthread -lm
+CC = gcc
+CFLAGS = -g -Wall -I./motor -I./line-sensor -D USE_BCM2835_LIB
+LDFLAGS = -L/usr/local/lib
+LIBS = -lbcm2835 -lpthread -lm
 
 # Executable names
-MAIN_EXEC=main.out
-TEST_EXEC=test_motor.out
+MAIN_EXEC = main.out
+TEST_MOTOR_EXEC = test_motor.out
+TEST_LINE_SENSOR_EXEC = test_line_sensor.out
 
 # Object files for the main program
-MAIN_OBJ=main.o motor/motor_control.o motor/PCA9685.o motor/DEV_Config.o
+MAIN_OBJ = main.o motor/motor_control.o motor/PCA9685.o motor/DEV_Config.o
 
 # Object files for the motor test program
-TEST_OBJ=motor/test_motor.o motor/motor_control.o motor/PCA9685.o motor/DEV_Config.o
+TEST_MOTOR_OBJ = motor/test_motor.o motor/motor_control.o motor/PCA9685.o motor/DEV_Config.o
+
+# Object files for the line sensor test program
+TEST_LINE_SENSOR_OBJ = line-sensor/test_line_sensor.o line-sensor/line_sensor.o
 
 # Default target: Build everything
-all: $(MAIN_EXEC) $(TEST_EXEC)
+all: $(MAIN_EXEC) $(TEST_MOTOR_EXEC) $(TEST_LINE_SENSOR_EXEC)
 
 # Compile the main program
 $(MAIN_EXEC): $(MAIN_OBJ)
 	$(CC) -o $(MAIN_EXEC) $(MAIN_OBJ) $(LDFLAGS) $(LIBS)
 
 # Compile the motor test program
-$(TEST_EXEC): $(TEST_OBJ)
-	$(CC) -o $(TEST_EXEC) $(TEST_OBJ) $(LDFLAGS) $(LIBS)
+$(TEST_MOTOR_EXEC): $(TEST_MOTOR_OBJ)
+	$(CC) -o $(TEST_MOTOR_EXEC) $(TEST_MOTOR_OBJ) $(LDFLAGS) $(LIBS)
+
+# Compile the line sensor test program
+$(TEST_LINE_SENSOR_EXEC): $(TEST_LINE_SENSOR_OBJ)
+	$(CC) -o $(TEST_LINE_SENSOR_EXEC) $(TEST_LINE_SENSOR_OBJ) $(LDFLAGS) $(LIBS)
 
 # Object file for main
 main.o: main.c motor/motor_control.h motor/PCA9685.h motor/DEV_Config.h
@@ -57,14 +66,26 @@ motor/PCA9685.o: motor/PCA9685.c motor/PCA9685.h
 motor/DEV_Config.o: motor/DEV_Config.c motor/DEV_Config.h
 	$(CC) -c motor/DEV_Config.c $(CFLAGS) -o motor/DEV_Config.o
 
+# Object file for test_line_sensor
+line-sensor/test_line_sensor.o: line-sensor/test_line_sensor.c line-sensor/line_sensor.h
+	$(CC) -c line-sensor/test_line_sensor.c $(CFLAGS) -o line-sensor/test_line_sensor.o
+
+# Object file for line_sensor
+line-sensor/line_sensor.o: line-sensor/line_sensor.c line-sensor/line_sensor.h
+	$(CC) -c line-sensor/line_sensor.c $(CFLAGS) -o line-sensor/line_sensor.o
+
 # Run the main program
 run: $(MAIN_EXEC)
 	sudo ./$(MAIN_EXEC)
 
 # Run the motor test program
-run_test_motor: $(TEST_EXEC)
-	sudo ./$(TEST_EXEC)
+run_test_motor: $(TEST_MOTOR_EXEC)
+	sudo ./$(TEST_MOTOR_EXEC)
+
+# Run the line sensor test program
+run_test_line_sensor: $(TEST_LINE_SENSOR_EXEC)
+	sudo ./$(TEST_LINE_SENSOR_EXEC)
 
 # Clean all build artifacts
 clean:
-	rm -f $(MAIN_OBJ) $(TEST_OBJ) $(MAIN_EXEC) $(TEST_EXEC)
+	rm -f $(MAIN_OBJ) $(TEST_MOTOR_OBJ) $(TEST_LINE_SENSOR_OBJ) $(MAIN_EXEC) $(TEST_MOTOR_EXEC) $(TEST_LINE_SENSOR_EXEC)
