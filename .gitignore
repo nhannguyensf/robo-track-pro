@@ -54,3 +54,6 @@ dkms.conf
 # IDE
 .idea/
 .vscode/
+
+# Ignore all .out files
+*.out
