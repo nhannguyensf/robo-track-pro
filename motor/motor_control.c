@@ -1,3 +1,32 @@
+/**************************************************************
+* Class    : CSC-615-01 Fall 2024
+* Name     : Nhan Nguyen
+* Student ID: 923100929
+* Github   : nhannguyensf
+* Project  : Final Assignment - Motor Control Implementation
+*
+* File     : motor_control.c
+*
+* Description:
+*   This file contains the implementation of motor control
+*   functions using the WaveShare Motor Driver HAT and PCA9685
+*   PWM controller. It includes:
+*     - Initialization of the motor driver and PWM settings.
+*     - Functions to control motor speed and direction.
+*     - Functions to stop the motors.
+*
+* Functions:
+*   - motor_init(): Initializes the motor driver and PWM controller.
+*   - motor_control(motor, speed): Sets the speed and direction
+*       of the specified motor (LEFT_MOTOR or RIGHT_MOTOR).
+*   - motor_stop(motor): Stops the specified motor.
+*
+* Notes:
+*   - The PCA9685 PWM frequency is set to 100 Hz.
+*   - Ensure proper connections between the Raspberry Pi,
+*     Motor Driver HAT, and motors.
+**************************************************************/
+
 #include "motor_control.h"
 #include <stdio.h>
 #include <stdlib.h>
