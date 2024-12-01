@@ -17,7 +17,7 @@ LDFLAGS=-L/usr/local/lib
 LIBS=-lbcm2835 -lpthread -lm
 
 # Executable name
-MAIN_EXEC=final_motor_control
+MAIN_EXEC=main.out
 
 # Object files for the main program
 MAIN_OBJ=main.o motor/motor_control.o motor/PCA9685.o motor/DEV_Config.o
@@ -43,7 +43,7 @@ run_test_motor:
 
 # Clean all build artifacts
 clean:
-	rm -f $(MAIN_OBJ) $(MAIN_EXEC)
+	rm -f $(MAIN_OBJ) $(MAIN_EXEC) *.out
 	$(MAKE) -C $(MOTOR_DIR) clean
 
 # Run the main program
