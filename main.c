@@ -66,12 +66,12 @@ void loop() {
     // Define weights for each sensor based on distance from the center
     const float SENSOR_WEIGHTS[NUM_SENSORS] = {3.0, 1.0, 0.0, 1.0, 3.0};
 
-    // Track the last known side of the line
-    if (sensor_states[0] == 1 || sensor_states[1] == 1) {
-        last_known_side = 1;  // Line detected on the left
-    } else if (sensor_states[3] == 1 || sensor_states[4] == 1) {
-        last_known_side = 0;  // Line detected on the right
-    }
+    // // Track the last known side of the line
+    // if (sensor_states[0] == 1 || sensor_states[1] == 1) {
+    //     last_known_side = 1;  // Line detected on the left
+    // } else if (sensor_states[3] == 1 || sensor_states[4] == 1) {
+    //     last_known_side = 0;  // Line detected on the right
+    // }
 
     // Calculate weighted average position of the line
     float position = 0.0f;
