@@ -35,6 +35,8 @@
 // Global variables
 PIDController pid;                // PID Controller instance
 volatile sig_atomic_t stop_flag;  // Flag for graceful termination
+int base_speed = BASE_SPEED;      // Initial base speed (modifiable)
+int last_known_side = 0;          // 0 = left, 1 = right
 
 // Function to handle Ctrl+C signal
 void handle_signal(int sig) {
@@ -62,7 +64,14 @@ void loop() {
     read_line_sensors(sensor_states);
 
     // Define weights for each sensor based on distance from the center
-    const float SENSOR_WEIGHTS[NUM_SENSORS] = {2.0, 1.0, 0.0, 1.0, 2.0};
+    const float SENSOR_WEIGHTS[NUM_SENSORS] = {3.0, 1.0, 0.0, 1.0, 3.0};
+
+    // Track the last known side of the line
+    if (sensor_states[0] == 1 || sensor_states[1] == 1) {
+        last_known_side = 1;  // Line detected on the left
+    } else if (sensor_states[3] == 1 || sensor_states[4] == 1) {
+        last_known_side = 0;  // Line detected on the right
+    }
 
     // Calculate weighted average position of the line
     float position = 0.0f;
@@ -83,6 +92,27 @@ void loop() {
         position = TARGET_POSITION;  // Default to center if no line detected
     }
 
+    // // Line lost recovery logic
+    // if (active_sensors == 0) {
+    //     printf("Line lost! Searching for the line...\n");
+
+    //     // Turn based on the last known side of the line
+    //     if (last_known_side == 0) {
+    //         // Turn to the left
+    //         motor_control(LEFT_MOTOR, -40);  // Reverse left motor
+    //         motor_control(RIGHT_MOTOR, 40); // Forward right motor
+    //         printf("Turning left to search for the line.\n");
+    //     } else {
+    //         // Turn to the right
+    //         motor_control(LEFT_MOTOR, 40);  // Forward left motor
+    //         motor_control(RIGHT_MOTOR, -40); // Reverse right motor
+    //         printf("Turning right to search for the line.\n");
+    //     }
+
+    //     usleep(300000); // Turn for 300ms
+    //     return;         // Skip the rest of the loop until the line is found
+    // }
+
     // Compute PID correction
     float correction = pid_compute(&pid, TARGET_POSITION, position);
 
@@ -101,8 +131,8 @@ void loop() {
     motor_control(RIGHT_MOTOR, right_speed);
 
     // Print debug information
-    printf("Position: %.2f | Correction: %.2f | Left Speed: %d | Right Speed: %d\n",
-           position, correction, left_speed, right_speed);
+    printf("Position: %.2f | Correction: %.2f | Base Speed: %d | Left Speed: %d | Right Speed: %d\n",
+           position, correction, base_speed, left_speed, right_speed);
 
     usleep(50000);  // Delay 50ms
 }
