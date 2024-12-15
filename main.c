@@ -23,13 +23,13 @@
 #include "pid.h"
 
 // PID Controller Constants
-#define KP 30.0f           // Proportional gain
+#define KP 40.0f           // Proportional gain
 #define KI 0.0f           // Integral gain
 #define KD 0.0f           // Derivative gain
 
 // Constants
 #define TARGET_POSITION 2.0f  // Center position for line (0-4 sensors, middle is 2)
-#define BASE_SPEED 50         // Base motor speed (percentage of max PWM)
+#define BASE_SPEED 70         // Base motor speed (percentage of max PWM)
 #define PID_OUTPUT_LIMIT 100  // Max output for PID controller
 
 // Global variables
@@ -61,18 +61,24 @@ void loop() {
     int sensor_states[NUM_SENSORS] = {0};
     read_line_sensors(sensor_states);
 
-    // Calculate the weighted average position of the line
+    // Define weights for each sensor based on distance from the center
+    const float SENSOR_WEIGHTS[NUM_SENSORS] = {2.0, 1.0, 0.0, 1.0, 2.0};
+
+    // Calculate weighted average position of the line
     float position = 0.0f;
+    float total_weight = 0.0f;
     int active_sensors = 0;
+
     for (int i = 0; i < NUM_SENSORS; i++) {
         if (sensor_states[i] == 1) {  // Line detected
-            position += i;
+            position += i * SENSOR_WEIGHTS[i];
+            total_weight += SENSOR_WEIGHTS[i];
             active_sensors++;
         }
     }
 
-    if (active_sensors > 0) {
-        position /= active_sensors;  // Average position of the line
+    if (active_sensors > 0 && total_weight > 0) {
+        position /= total_weight;  // Weighted average position
     } else {
         position = TARGET_POSITION;  // Default to center if no line detected
     }
