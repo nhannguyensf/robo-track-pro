@@ -25,7 +25,7 @@ TEST_LINE_SENSOR_EXEC = test_line_sensor.out
 TEST_ECHO_SENSOR_EXEC = test_echo_sensor.out
 
 # Object files for the main program
-MAIN_OBJ = main.o motor/motor_control.o motor/PCA9685.o motor/DEV_Config.o
+MAIN_OBJ = main.o motor/motor_control.o motor/PCA9685.o motor/DEV_Config.o pid/pid.o line-sensor/line_sensor.o
 
 # Object files for the motor test program
 TEST_MOTOR_OBJ = motor/test_motor.o motor/motor_control.o motor/PCA9685.o motor/DEV_Config.o
@@ -56,12 +56,12 @@ $(TEST_ECHO_SENSOR_EXEC): $(TEST_ECHO_SENSOR_OBJ)
 	$(CC) -o $(TEST_ECHO_SENSOR_EXEC) $(TEST_ECHO_SENSOR_OBJ) $(LDFLAGS) $(LIBS)
 
 # Object file for main
-main.o: main.c motor/motor_control.h motor/PCA9685.h motor/DEV_Config.h
-	$(CC) -c main.c $(CFLAGS)
+main.o: main.c motor/motor_control.h motor/PCA9685.h motor/DEV_Config.h pid/pid.h line-sensor/line_sensor.h
+	$(CC) -c main.c $(CFLAGS) -o main.o
 
-# Object file for test_motor
-motor/test_motor.o: motor/test_motor.c motor/motor_control.h motor/PCA9685.h motor/DEV_Config.h
-	$(CC) -c motor/test_motor.c $(CFLAGS) -o motor/test_motor.o
+# Object file for PID controller
+pid/pid.o: pid/pid.c pid/pid.h
+	$(CC) -c pid/pid.c $(CFLAGS) -o pid/pid.o
 
 # Object file for motor_control
 motor/motor_control.o: motor/motor_control.c motor/motor_control.h motor/PCA9685.h motor/DEV_Config.h
@@ -75,13 +75,17 @@ motor/PCA9685.o: motor/PCA9685.c motor/PCA9685.h
 motor/DEV_Config.o: motor/DEV_Config.c motor/DEV_Config.h
 	$(CC) -c motor/DEV_Config.c $(CFLAGS) -o motor/DEV_Config.o
 
+# Object file for line_sensor
+line-sensor/line_sensor.o: line-sensor/line_sensor.c line-sensor/line_sensor.h
+	$(CC) -c line-sensor/line_sensor.c $(CFLAGS) -o line-sensor/line_sensor.o
+
 # Object file for test_line_sensor
 line-sensor/test_line_sensor.o: line-sensor/test_line_sensor.c line-sensor/line_sensor.h
 	$(CC) -c line-sensor/test_line_sensor.c $(CFLAGS) -o line-sensor/test_line_sensor.o
 
-# Object file for line_sensor
-line-sensor/line_sensor.o: line-sensor/line_sensor.c line-sensor/line_sensor.h
-	$(CC) -c line-sensor/line_sensor.c $(CFLAGS) -o line-sensor/line_sensor.o
+# Object file for test_motor
+motor/test_motor.o: motor/test_motor.c motor/motor_control.h motor/PCA9685.h motor/DEV_Config.h
+	$(CC) -c motor/test_motor.c $(CFLAGS) -o motor/test_motor.o
 
 # Object file for test_echo_sensor
 echo-sensor/test_echo_sensor.o: echo-sensor/test_echo_sensor.c echo-sensor/echo-sensor.h
