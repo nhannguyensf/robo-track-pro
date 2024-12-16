@@ -25,7 +25,7 @@ TEST_LINE_SENSOR_EXEC = test_line_sensor.out
 TEST_ECHO_SENSOR_EXEC = test_echo_sensor.out
 
 # Object files for the main program
-MAIN_OBJ = main.o motor/motor_control.o motor/PCA9685.o motor/DEV_Config.o pid/pid.o line-sensor/line_sensor.o
+MAIN_OBJ = main.o motor/motor_control.o motor/PCA9685.o motor/DEV_Config.o pid/pid.o line-sensor/line_sensor.o echo-sensor/echo_sensor.o
 
 # Object files for the motor test program
 TEST_MOTOR_OBJ = motor/test_motor.o motor/motor_control.o motor/PCA9685.o motor/DEV_Config.o
@@ -34,7 +34,7 @@ TEST_MOTOR_OBJ = motor/test_motor.o motor/motor_control.o motor/PCA9685.o motor/
 TEST_LINE_SENSOR_OBJ = line-sensor/test_line_sensor.o line-sensor/line_sensor.o
 
 # Object files for the echo sensor test program
-TEST_ECHO_SENSOR_OBJ = echo-sensor/test_echo_sensor.o echo-sensor/echo-sensor.o
+TEST_ECHO_SENSOR_OBJ = echo-sensor/test_echo_sensor.o echo-sensor/echo_sensor.o
 
 # Default target: Build everything
 all: $(MAIN_EXEC) $(TEST_MOTOR_EXEC) $(TEST_LINE_SENSOR_EXEC) $(TEST_ECHO_SENSOR_EXEC)
@@ -88,12 +88,12 @@ motor/test_motor.o: motor/test_motor.c motor/motor_control.h motor/PCA9685.h mot
 	$(CC) -c motor/test_motor.c $(CFLAGS) -o motor/test_motor.o
 
 # Object file for test_echo_sensor
-echo-sensor/test_echo_sensor.o: echo-sensor/test_echo_sensor.c echo-sensor/echo-sensor.h
+echo-sensor/test_echo_sensor.o: echo-sensor/test_echo_sensor.c echo-sensor/echo_sensor.h
 	$(CC) -c echo-sensor/test_echo_sensor.c $(CFLAGS) -o echo-sensor/test_echo_sensor.o
 
 # Object file for echo_sensor
-echo-sensor/echo-sensor.o: echo-sensor/echo-sensor.c echo-sensor/echo-sensor.h
-	$(CC) -c echo-sensor/echo-sensor.c $(CFLAGS) -o echo-sensor/echo-sensor.o
+echo-sensor/echo_sensor.o: echo-sensor/echo_sensor.c echo-sensor/echo_sensor.h
+	$(CC) -c echo-sensor/echo_sensor.c $(CFLAGS) -o echo-sensor/echo_sensor.o
 
 # Run the main program
 run: $(MAIN_EXEC)

@@ -1,4 +1,4 @@
-#include "echo-sensor.h"
+#include "echo_sensor.h"
 #include <bcm2835.h>
 #include <stdio.h>
 

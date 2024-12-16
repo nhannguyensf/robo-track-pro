@@ -1,4 +1,31 @@
-#include "echo-sensor.h"
+/**************************************************************
+* Class    : CSC-615-01 Fall 2024
+* Name     : Nhan Nguyen
+* Student ID: 923100929
+* Github   : nhannguyensf
+* Project  : Ultrasonic Sensors for Obstacle Detection
+*
+* File     : echo_sensor.c
+*
+* Description:
+*   This file provides the implementation for managing and
+*   retrieving distance measurements from 5 ultrasonic echo
+*   sensors. It includes functions to initialize GPIO pins,
+*   calculate the distance to obstacles, and test sensor readings.
+*
+* Features:
+*   - Initialization of trigger and echo pins for 5 sensors.
+*   - Calculation of distance based on pulse travel time.
+*   - Continuous reading and display of sensor data for testing.
+*
+* Usage:
+*   - Call `echo_sensors_init()` to set up sensors.
+*   - Use `read_echo_sensors()` to retrieve distances in an array.
+*   - For debugging, use `test_echo_sensors()` to display real-time
+*     distance measurements for all sensors.
+**************************************************************/
+
+#include "echo_sensor.h"
 #include <bcm2835.h>
 #include <stdio.h>
 #include <stdlib.h>

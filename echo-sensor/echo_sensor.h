@@ -5,7 +5,7 @@
 * Github   : nhannguyensf
 * Project  : Ultrasonic Sensors for Obstacle Detection
 *
-* File     : echo-sensor.h
+* File     : echo_sensor.h
 *
 * Description:
 *   This header file contains constants, function prototypes,
