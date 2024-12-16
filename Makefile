@@ -14,9 +14,9 @@
 
 # Compiler and flags
 CC = gcc
-CFLAGS = -g -Wall -I./motor -I./line-sensor -I./echo-sensor -D USE_BCM2835_LIB
+CFLAGS = -g -Wall -I./motor -I./line-sensor -I./echo-sensor -I./pid -D USE_BCM2835_LIB
 LDFLAGS = -L/usr/local/lib
-LIBS = -lbcm2835 -lpthread -lm
+LIBS = -lbcm2835 -lpthread -lm -lrt
 
 # Executable names
 MAIN_EXEC = main.out
