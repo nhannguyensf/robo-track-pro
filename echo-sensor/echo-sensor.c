@@ -79,11 +79,20 @@ void read_echo_sensors(float* sensor_distances) {
 void test_echo_sensors() {
     while (1) {
         read_echo_sensors(echo_distances);
-        printf("Distances (cm): ");
+
+        // Print header
+        printf("-----------------------------------\n");
+        printf("| Sensor 0 | Sensor 1 | Sensor 2 | Sensor 3 | Sensor 4 |\n");
+        printf("-----------------------------------\n");
+
+        // Print distances
+        printf("|");
         for (int i = 0; i < NUM_ECHO_SENSORS; i++) {
-            printf("%.2f ", echo_distances[i]);
+            printf(" %8.2f |", echo_distances[i]);
         }
         printf("\n");
+        printf("-----------------------------------\n");
+
         fflush(stdout);
         sleep(1); // Delay between readings
     }
