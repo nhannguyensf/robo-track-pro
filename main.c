@@ -95,6 +95,9 @@ void loop() {
             active_sensors++;
         }
     }
+    if (active_sensors == 0) {
+        return;
+    }
 
     if (active_sensors > 0 && total_weight > 0) {
         position /= total_weight;  // Weighted average position

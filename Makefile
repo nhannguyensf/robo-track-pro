@@ -56,7 +56,7 @@ $(TEST_ECHO_SENSOR_EXEC): $(TEST_ECHO_SENSOR_OBJ)
 	$(CC) -o $(TEST_ECHO_SENSOR_EXEC) $(TEST_ECHO_SENSOR_OBJ) $(LDFLAGS) $(LIBS)
 
 # Object file for main
-main.o: main.c motor/motor_control.h motor/PCA9685.h motor/DEV_Config.h pid/pid.h line-sensor/line_sensor.h
+main.o: main.c motor/motor_control.h motor/PCA9685.h motor/DEV_Config.h pid/pid.h line-sensor/line_sensor.h echo-sensor/echo_sensor.h
 	$(CC) -c main.c $(CFLAGS) -o main.o
 
 # Object file for PID controller

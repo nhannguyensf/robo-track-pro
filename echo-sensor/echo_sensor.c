@@ -60,7 +60,10 @@ void echo_sensors_init() {
     bcm2835_gpio_write(TRIG_2_PIN, LOW);
     bcm2835_gpio_write(TRIG_3_PIN, LOW);
     bcm2835_gpio_write(TRIG_4_PIN, LOW);
-    usleep(200000); // Wait 200ms for sensors to stabilize
+    
+    for (int i = 0; i < 20; i++) {
+    usleep(10000); // 10ms delay repeated 20 times (total 200ms)
+    }
 }
 
 // Function to calculate distance for a single sensor
