@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <time.h>  // Required for clock_gettime and CLOCK_REALTIME
 
 // Array to store sensor readings
 float echo_distances[NUM_ECHO_SENSORS];
