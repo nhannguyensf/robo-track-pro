@@ -27,8 +27,22 @@
 #include "motor_control.h"
 #include <stdio.h>
 #include <unistd.h>
+#include <signal.h>
+
+// Global flag for termination
+volatile sig_atomic_t stop_flag = 0;
+
+// Signal handler for Ctrl+C
+void handle_signal(int sig) {
+    if (sig == SIGINT) {
+        stop_flag = 1; // Set the flag to stop the program
+    }
+}
 
 int main() {
+    // Register the signal handler for SIGINT
+    signal(SIGINT, handle_signal);
+
     motor_init();
 
     printf("Both motors forward at 50%%\n");
@@ -36,31 +50,47 @@ int main() {
     motor_control(RIGHT_MOTOR, 50);  // Right motor forward
     sleep(3);
 
+    if (stop_flag) goto exit_cleanly;
+
     printf("Stopping both motors\n");
     motor_stop(LEFT_MOTOR);
     motor_stop(RIGHT_MOTOR);
     usleep(100000);
+
+    if (stop_flag) goto exit_cleanly;
 
     printf("Motors in opposite directions\n");
     motor_control(LEFT_MOTOR, 50);   // Left motor forward
     motor_control(RIGHT_MOTOR, -50); // Right motor reverse
     sleep(3);
 
+    if (stop_flag) goto exit_cleanly;
+
     printf("Stopping both motors\n");
     motor_stop(LEFT_MOTOR);
     motor_stop(RIGHT_MOTOR);
     usleep(100000);
+
+    if (stop_flag) goto exit_cleanly;
 
     printf("Both motors backward at 100%%\n");
     motor_control(LEFT_MOTOR, -100);  // Left motor backward
     motor_control(RIGHT_MOTOR, -100); // Right motor backward
     sleep(3);
 
+    if (stop_flag) goto exit_cleanly;
+
     printf("Stopping both motors\n");
     motor_stop(LEFT_MOTOR);
     motor_stop(RIGHT_MOTOR);
     usleep(100000);
 
-    DEV_ModuleExit();
+exit_cleanly:
+    printf("\nTerminating program...\n");
+    motor_stop(LEFT_MOTOR);
+    motor_stop(RIGHT_MOTOR);
+    DEV_ModuleExit(); // Clean up the device
+    printf("Motors stopped. Program exited cleanly.\n");
+
     return 0;
 }
