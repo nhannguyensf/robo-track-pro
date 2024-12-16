@@ -120,11 +120,11 @@ void loop() {
     int left_speed = BASE_SPEED - (int)correction;
     int right_speed = BASE_SPEED + (int)correction;
 
-    // Clamp motor speeds to valid range (0-100)
+    // Clamp motor speeds to valid range (-100,100)
     if (left_speed > 100) left_speed = 100;
-    if (left_speed < 0) left_speed = 0;
+    if (left_speed < -100) left_speed = -100;
     if (right_speed > 100) right_speed = 100;
-    if (right_speed < 0) right_speed = 0;
+    if (right_speed < -100) right_speed = -100;
 
     // Apply motor speeds
     motor_control(LEFT_MOTOR, left_speed);
